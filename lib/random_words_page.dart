@@ -29,8 +29,8 @@ class RandomWordsPage extends StatelessWidget {
       body: ListView.builder(
         itemCount: appState.currentImages.length,
         itemBuilder: (context, index) {
-          String imageUrl = appState.currentImages[index];
-          return BigCard(imageUrl: imageUrl);
+          Map<String, String> imageInfo = appState.currentImages[index];
+          return BigCard(imageInfo: imageInfo);
         },
       ),
       floatingActionButton: FloatingActionButton(
@@ -44,9 +44,9 @@ class RandomWordsPage extends StatelessWidget {
 }
 
 class BigCard extends StatefulWidget {
-  final String imageUrl; // URL o ruta de la imagen
+  final Map<String, String> imageInfo;
 
-  const BigCard({super.key, required this.imageUrl});
+  const BigCard({super.key, required this.imageInfo});
 
   @override
   _BigCardState createState() => _BigCardState();
@@ -58,124 +58,107 @@ class _BigCardState extends State<BigCard> {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-    bool isFavorite = appState.favorites.contains(
-      widget.imageUrl,
-    ); // Verifica si la imagen es favorita
+    bool isFavorite = appState.favorites.contains(widget.imageInfo['url']);
 
     return Card(
-      elevation: 4, // Sombra de la tarjeta
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10), // Bordes redondeados
-      ),
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       color: Colors.blueGrey[100],
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start, // Alineación del texto
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           GestureDetector(
             onTap: () {
               setState(() {
                 _isTextVisible =
-                    !_isTextVisible; // Alterna la visibilidad del texto
+                    !_isTextVisible; // Alternar visibilidad del texto
               });
             },
             child: Stack(
               children: [
-                // Verifica si la imagen es local o en línea
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child:
-                      widget.imageUrl.startsWith('http')
+                      widget.imageInfo['url']!.startsWith('http')
                           ? FadeInImage.assetNetwork(
-                            placeholder:
-                                'assets/loading.gif', // Ruta del placeholder
-                            image: widget.imageUrl,
-                            fit:
-                                BoxFit
-                                    .contain, // Ajusta la imagen para cubrir todo
+                            placeholder: 'assets/loading.gif',
+                            image: widget.imageInfo['url']!,
+                            fit: BoxFit.contain,
                             width: double.infinity,
-                            height: 280,
+                            // Altura predefinida cuando no se ven detalles
+                            height: _isTextVisible ? null : 280,
                             imageErrorBuilder: (context, error, stackTrace) {
                               return Image.asset(
-                                'assets/error.gif', // Ruta de imagen en caso de error
+                                'assets/error.gif',
                                 fit: BoxFit.contain,
                                 width: double.infinity,
-                                height: 280,
+                                height: _isTextVisible ? null : 280,
                               );
                             },
                           )
                           : Image.asset(
-                            widget.imageUrl, // Muestra la imagen local
+                            widget.imageInfo['url']!,
                             fit: BoxFit.contain,
                             width: double.infinity,
-                            height: 280,
+                            height: _isTextVisible ? null : 280,
                           ),
                 ),
-                // Botón de like superpuesto sobre la imagen
                 Positioned(
-                  top: 10, // Ajusta la posición vertical
-                  right: 10, // Ajusta la posición horizontal
+                  top: 10,
+                  right: 10,
                   child: IconButton(
                     icon: Icon(
                       isFavorite ? Icons.favorite : Icons.favorite_border,
-                      color:
-                          isFavorite
-                              ? Colors.red
-                              : Colors.lightBlueAccent, // Cambia el color
+                      color: isFavorite ? Colors.red : Colors.lightBlueAccent,
                     ),
                     onPressed: () {
-                      appState.toggleFavorite(
-                        widget.imageUrl,
-                      ); // Alterna la favorita para esta imagen
+                      appState.toggleFavorite(widget.imageInfo['url']!);
                     },
-                    tooltip: 'Me gusta', // Tooltip del botón
-                    padding: EdgeInsets.all(
-                      10,
-                    ), // Espaciado alrededor del botón
-                    splashColor: Colors.red.withOpacity(
-                      0.5,
-                    ), // Color al presionar
+                    tooltip: 'Me gusta',
+                    padding: EdgeInsets.all(10),
+                    splashColor: Colors.red.withOpacity(0.5),
                   ),
                 ),
-                // Botón de compartir en la esquina inferior izquierda
                 Positioned(
-                  bottom: 10, // Ajusta la posición vertical
-                  left: 10, // Ajusta la posición horizontal
+                  bottom: 10,
+                  left: 10,
                   child: IconButton(
-                    icon: Icon(
-                      Icons.share,
-                      color: Colors.lightBlue, // Cambia el color
-                    ),
+                    icon: Icon(Icons.share, color: Colors.lightBlue),
                     onPressed: () {
                       // Lógica para compartir
                     },
-                    tooltip: 'Compartir', // Tooltip del botón
-                    padding: EdgeInsets.all(
-                      10,
-                    ), // Espaciado alrededor del botón
+                    tooltip: 'Compartir',
+                    padding: EdgeInsets.all(10),
                   ),
                 ),
               ],
             ),
           ),
-          // Contenedor para el texto con fondo de otro color
-          if (_isTextVisible // Muestra el texto solo si _isTextVisible es true
-          ) ...[
+          if (_isTextVisible) ...[
             Container(
-              color: Colors.blue[100], // Cambia esto al color que desees
-              padding: const EdgeInsets.all(
-                8.0,
-              ), // Espaciado dentro del contenedor
-              child: Text(
-                widget.imageUrl,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.black54,
-                ), // Estilo del texto
-                textAlign: TextAlign.center, // Alineación del texto
-                maxLines: 2, // Limita a 2 líneas si es necesario
-                overflow:
-                    TextOverflow
-                        .ellipsis, // Muestra ... si el texto es demasiado largo
+              color: Colors.blue[100],
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.imageInfo['title']!,
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    widget.imageInfo['description']!,
+                    style: TextStyle(fontSize: 12, color: Colors.black54),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    widget.imageInfo['url']!,
+                    style: TextStyle(fontSize: 12, color: Colors.black54),
+                    textAlign: TextAlign.left,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
             ),
           ],
