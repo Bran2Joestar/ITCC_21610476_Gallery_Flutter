@@ -1,6 +1,6 @@
-# proyecto_u2
+# Proyecto de Unidad 2
 
-A new Flutter project.
+Un proyecto de flutter para mostrar imagenes
 
 ## Getting Started
 
