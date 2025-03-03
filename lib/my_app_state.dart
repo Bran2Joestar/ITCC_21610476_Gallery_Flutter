@@ -17,7 +17,7 @@ class MyAppState extends ChangeNotifier {
     'assets/perrito_local.jpg',
   ];
 
-  var current = ''; // Almacena la palabra actual
+  List<String> currentImages = []; // Lista para almacenar las imágenes actuales
   var favorites = <String>[]; // Lista de palabras favoritas
 
   MyAppState() {
@@ -25,15 +25,16 @@ class MyAppState extends ChangeNotifier {
   }
 
   void getNext() {
-    current = (words..shuffle()).first; // Selecciona una palabra aleatoria
+    currentImages =
+        (words..shuffle()).take(4).toList(); // Selecciona 4 imágenes aleatorias
     notifyListeners(); // Notifica a los oyentes sobre el cambio
   }
 
-  void toggleFavorite() {
-    if (favorites.contains(current)) {
-      favorites.remove(current); // Si ya es favorita, la elimina
+  void toggleFavorite(String imageUrl) {
+    if (favorites.contains(imageUrl)) {
+      favorites.remove(imageUrl); // Si la imagen ya es favorita, la elimina
     } else {
-      favorites.add(current); // Si no es favorita, la agrega
+      favorites.add(imageUrl); // Si no es favorita, la agrega
     }
     notifyListeners(); // Notifica a los oyentes sobre el cambio
   }
