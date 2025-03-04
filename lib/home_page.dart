@@ -9,7 +9,8 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pinter-Cats'),
+        centerTitle: true,
+        title: Text('Pinter-Cats', style: TextStyle(color: Colors.red)),
         actions: [
           IconButton(
             icon: Icon(Icons.list),
@@ -31,7 +32,7 @@ class MyHomePage extends StatelessWidget {
             SizedBox(height: 20), // Espacio entre la imagen y el texto
             // Texto
             Text(
-              'Galeria bien bonita ALV',
+              'Galeria bien bonita',
               style: TextStyle(
                 fontSize: 24,
               ), // Ajusta el estilo según sea necesario
@@ -45,7 +46,16 @@ class MyHomePage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => RandomWordsPage()),
                 );
               },
-              child: Text('Ir a Palabras Aleatorias'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    Colors.redAccent, // Cambia el color de fondo aquí
+              ),
+              child: Text(
+                'Mostrar Imagenes',
+                style: TextStyle(
+                  color: Colors.white,
+                ), // Cambia el color del texto aquí
+              ),
             ),
           ],
         ),

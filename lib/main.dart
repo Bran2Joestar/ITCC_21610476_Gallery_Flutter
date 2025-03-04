@@ -18,8 +18,9 @@ class MyApp extends StatelessWidget {
         title: 'Proyecto Unidad 2',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple),
         ),
+        debugShowCheckedModeBanner: false,
         home: MyHomePage(),
       ),
     );

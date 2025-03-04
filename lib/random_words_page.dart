@@ -12,7 +12,12 @@ class RandomWordsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Imágenes Lindas 😍'),
+        backgroundColor: Colors.red,
+        centerTitle: true,
+        title: Text(
+          'Imágenes Lindas 😍',
+          style: TextStyle(color: Colors.white),
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.list),
@@ -25,7 +30,7 @@ class RandomWordsPage extends StatelessWidget {
           ),
         ],
       ),
-      backgroundColor: Colors.cyan,
+      backgroundColor: Colors.purpleAccent[10],
       body: ListView.builder(
         itemCount: appState.currentImages.length,
         itemBuilder: (context, index) {
